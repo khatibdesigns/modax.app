@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=ai1" />
+  <link rel="stylesheet" href="/styles.css?v=contact1" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://modax.app/" />
   <meta property="og:title" content="MODAX — The AI-native modular CRM your business actually fits" />
@@ -29,6 +29,7 @@
         <a href="#marketplace">Marketplace</a>
         <a href="https://app.modax.app/developers">Developers</a>
         <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
         <a class="link" href="https://app.modax.app/signin">Sign in</a>
@@ -231,7 +232,7 @@
           <div class="price">Custom</div>
           <div class="tl">White-label &amp; platform.</div>
           <ul><li>Everything in Growth</li><li>White-label &amp; custom domains</li><li>Publisher marketplace &amp; rev-share</li><li>SSO &amp; priority support</li></ul>
-          <a class="btn btn-ghost" href="mailto:hello@modax.app?subject=MODAX%20Scale">Talk to us</a>
+          <a class="btn btn-ghost" href="#contact">Talk to us</a>
         </div>
       </div>
     </div>
@@ -248,6 +249,47 @@
     </div>
   </section>
 
+  <!-- CONTACT -->
+  <section id="contact" class="contact-sec">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <div class="contact-copy">
+          <span class="eyebrow">Talk to us</span>
+          <h2>Let&rsquo;s map MODAX to your team.</h2>
+          <p>Tell us what you run today and where you want to go. We&rsquo;ll come back with a workspace plan &mdash; the right modules, seat count, and white-label setup for you.</p>
+          <ul class="contact-points">
+            <li>A module &amp; seat plan built around your workflow</li>
+            <li>White-label, custom domains &amp; your own branding</li>
+            <li>Migration and onboarding help to get you live</li>
+          </ul>
+          <p class="contact-alt">Prefer email? <a href="mailto:hello@modax.app">hello@modax.app</a></p>
+        </div>
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="cf-grid">
+            <label class="cf-field">
+              <span>Name</span>
+              <input name="name" type="text" autocomplete="name" required maxlength="120" placeholder="Jane Doe" />
+            </label>
+            <label class="cf-field">
+              <span>Work email</span>
+              <input name="email" type="email" autocomplete="email" required maxlength="160" placeholder="jane@company.com" />
+            </label>
+          </div>
+          <label class="cf-field">
+            <span>Company <em>optional</em></span>
+            <input name="company" type="text" autocomplete="organization" maxlength="120" placeholder="Company Inc." />
+          </label>
+          <label class="cf-field">
+            <span>How can we help?</span>
+            <textarea name="message" rows="4" maxlength="2000" placeholder="We run ~20 people on spreadsheets and want quotes, invoicing and a shared inbox&hellip;"></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary btn-lg cf-submit">Send message</button>
+          <p class="cf-status" id="cfStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer>
     <div class="wrap foot-in">
@@ -256,12 +298,49 @@
         <a href="#modules">Modules</a>
         <a href="#pricing">Pricing</a>
         <a href="https://app.modax.app/signin">Sign in</a>
-        <a href="mailto:hello@modax.app">Contact</a>
+        <a href="#contact">Contact</a>
       </div>
       <span>© <span id="yr">2026</span> MODAX · The modular CRM platform</span>
     </div>
   </footer>
 
-  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Contact form → api.modax.app/public/contact (CORS-allowlisted).
+    (function () {
+      var form = document.getElementById('contactForm');
+      if (!form) return;
+      var status = document.getElementById('cfStatus');
+      function setStatus(msg, kind) { status.textContent = msg; status.className = 'cf-status' + (kind ? ' ' + kind : ''); }
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('.cf-submit');
+        var d = Object.fromEntries(new FormData(form).entries());
+        if (!d.name || !d.email) { setStatus('Please add your name and email.', 'err'); return; }
+        setStatus('', '');
+        btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+          var r = await fetch('https://api.modax.app/public/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: d.name, email: d.email,
+              company: d.company || undefined,
+              message: d.message || undefined,
+              source: 'modax.app/contact',
+            }),
+          });
+          if (!r.ok) throw new Error(String(r.status));
+          form.reset();
+          setStatus('Thanks — we’ll be in touch within one business day.', 'ok');
+        } catch (err) {
+          setStatus('Something went wrong. Email us at hello@modax.app and we’ll sort it out.', 'err');
+        } finally {
+          btn.disabled = false; btn.textContent = 'Send message';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
