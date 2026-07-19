@@ -189,3 +189,12 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--mute
   .reveal { opacity: 1; transform: none; transition: none; }
   .mock-bar .fill { animation: none; }
 }
+
+/* POS/order kiosk showcase mock */
+.kiosk-vis-order { display:flex; flex-direction:column; justify-content:center; gap:14px; }
+.kiosk-vis-order .q { font-size: clamp(22px,3vw,30px); font-weight:800; letter-spacing:-.02em; margin-bottom:4px; }
+.ko-mini { display:flex; flex-direction:column; gap:10px; }
+.ko-mini-row { display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+.ko-mini-row b { color:var(--brand); }
+.ko-mini-cart { display:flex; align-items:center; justify-content:space-between; margin-top:6px; background:var(--brand); color:#fff; border-radius:14px; padding:14px 18px; font-weight:700; font-size:18px; }
+.ko-mini-cart b { font-size:20px; }
