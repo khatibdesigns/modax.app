@@ -19,15 +19,8 @@
   --maxw: 1120px;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b0d12; --bg-2: #0f1218; --panel: #141821; --border: #232833;
-    --ink: #eef1f6; --muted: #9aa4b2; --accent: #7c8bff; --accent-2: #a78bfa;
-    --accent-soft: rgba(124, 139, 255, .12);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, .4); --shadow-lg: 0 24px 60px rgba(0, 0, 0, .55);
-    color-scheme: dark;
-  }
-}
+/* Light-first: MODAX presents as a clean, bright product. The marketing site
+   stays light for every visitor (no auto-dark on dark-OS machines). */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
@@ -284,10 +277,6 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--mute
 .cf-status { font-size: 14px; font-weight: 500; min-height: 1.2em; margin: -2px 0 0; }
 .cf-status.ok { color: #17803d; }
 .cf-status.err { color: #c0362c; }
-@media (prefers-color-scheme: dark) {
-  .cf-status.ok { color: #4ade80; }
-  .cf-status.err { color: #f87171; }
-}
 @media (max-width: 820px) {
   .contact-card { grid-template-columns: 1fr; }
 }
