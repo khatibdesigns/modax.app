@@ -283,3 +283,67 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--mute
 @media (max-width: 480px) {
   .cf-grid { grid-template-columns: 1fr; }
 }
+
+/* ============ RTL — Arabic mirror (/ar/) ============
+   Additive only. Every rule below is scoped to [dir="rtl"] (or the shared
+   .lang-switch element), so the LTR English page renders exactly as before.
+   Physical props are flipped to their inline-start/inline-end mirror. */
+
+/* nav language switch — used on both locales (العربية / EN) */
+.lang-switch { border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; font-size: 13px; line-height: 1; }
+.lang-switch:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); color: var(--ink); }
+
+/* browser-chrome mock: the url label follows the traffic-light dots */
+[dir="rtl"] .frame-bar .url { margin-left: 0; margin-right: 10px; }
+
+/* bulleted lists: marker + its gutter move to the right edge */
+[dir="rtl"] .split li,
+[dir="rtl"] .tier li,
+[dir="rtl"] .ai-list li,
+[dir="rtl"] .contact-points li { padding-left: 0; }
+[dir="rtl"] .split li { padding-right: 26px; }
+[dir="rtl"] .tier li { padding-right: 24px; }
+[dir="rtl"] .ai-list li { padding-right: 30px; }
+[dir="rtl"] .contact-points li { padding-right: 30px; }
+[dir="rtl"] .split li::before,
+[dir="rtl"] .tier li::before,
+[dir="rtl"] .ai-list li::before,
+[dir="rtl"] .contact-points li::before { left: auto; right: 0; }
+
+/* "Most popular" ribbon → right corner */
+[dir="rtl"] .tier .tag { left: auto; right: 24px; }
+
+/* pipeline mock bars fill/animate from the inline-start (now the right) */
+[dir="rtl"] .mock-bar .fill { transform-origin: right; }
+
+/* AI chat bubbles: mirror the little tail corner */
+[dir="rtl"] .ai-ubub { border-radius: 14px 14px 14px 5px; }
+[dir="rtl"] .ai-bubble { border-radius: 14px 5px 14px 14px; }
+
+/* alternating split: base CSS uses direction:rtl to swap columns for the
+   zigzag. On an RTL page that ordering is the natural one, so flip .alt back
+   to ltr for the swap and restore rtl text flow inside the cells. */
+[dir="rtl"] .split.alt { direction: ltr; }
+[dir="rtl"] .split.alt > * { direction: rtl; }
+
+/* mirror the 3D product tilt so it leans toward the layout centre */
+[dir="rtl"] .hero .frame { transform: perspective(1600px) rotateY(9deg) rotateX(3deg); transform-origin: right center; animation-name: heroFrameInRtl; }
+@keyframes heroFrameInRtl { from { opacity: 0; transform: perspective(1600px) rotateY(9deg) rotateX(3deg) translateY(16px); } }
+[dir="rtl"] .ai-frame { transform: perspective(1600px) rotateY(-6deg) rotateX(3deg); transform-origin: left center; }
+
+/* mirror the ambient hero / AI glows to sit behind the right-aligned copy */
+[dir="rtl"] .hero::before {
+  background: radial-gradient(720px 380px at 78% 0, color-mix(in srgb, var(--accent) 22%, transparent), transparent 68%),
+              radial-gradient(560px 320px at 8% 8%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 66%);
+}
+[dir="rtl"] .ai-sec::before {
+  background: radial-gradient(680px 360px at 22% 0, color-mix(in srgb, var(--accent) 20%, transparent), transparent 66%),
+              radial-gradient(520px 300px at 90% 12%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 64%);
+}
+
+/* mobile: keep frames flat and text rtl (RTL rules above out-specify the base reset) */
+@media (max-width: 900px) {
+  [dir="rtl"] .hero .frame { transform: none; animation-name: heroFrameIn; }
+  [dir="rtl"] .ai-frame { transform: none; }
+  [dir="rtl"] .split, [dir="rtl"] .split.alt { direction: rtl; }
+}
