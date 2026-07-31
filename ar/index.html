@@ -226,7 +226,7 @@
         <div class="tier hot reveal">
           <div class="tag">الأكثر شيوعًا</div>
           <div class="name">النمو</div>
-          <div class="price">$19 <em>/ مستخدم·شهر</em></div>
+          <div class="price"><span id="growthAmt">$19</span> <em>/ مستخدم·شهر</em></div>
           <div class="tl">أرخص من Odoo أو Zoho أو Pipedrive — وبمزايا أكثر بكثير.</div>
           <ul><li>كل ما في باقة المبتدئة</li><li>عروض الأسعار ومكتب الخدمة والحملات</li><li>الأتمتة والبريد المشترك</li><li>مساعد ذكي + إضافات السوق</li></ul>
           <a class="btn btn-primary" href="https://app.modax.app/signup">ابدأ مجانًا</a>
@@ -346,5 +346,16 @@
       });
     })();
   </script>
+<script>
+/* Localize the Growth plan price to the visitor's currency (IP -> country). */
+(function(){
+  var P={USD:"$19",EUR:"€18",GBP:"£15",AED:"AED 69",SAR:"SAR 71",KWD:"KWD 5.750",QAR:"QAR 69",BHD:"BHD 7.200",OMR:"OMR 7.300",EGP:"EGP 590",JOD:"JOD 13.50",INR:"₹1,600",PKR:"₨5,300",TRY:"₺650",CAD:"C$26",AUD:"A$29"};
+  var C={US:"USD",AE:"AED",SA:"SAR",KW:"KWD",QA:"QAR",BH:"BHD",OM:"OMR",EG:"EGP",JO:"JOD",IN:"INR",PK:"PKR",TR:"TRY",CA:"CAD",AU:"AUD",GB:"GBP",DE:"EUR",FR:"EUR",ES:"EUR",IT:"EUR",NL:"EUR",IE:"EUR",PT:"EUR",AT:"EUR",BE:"EUR",FI:"EUR",GR:"EUR",LU:"EUR",CY:"EUR",MT:"EUR",SK:"EUR",SI:"EUR",EE:"EUR",LV:"EUR",LT:"EUR",HR:"EUR"};
+  function set(cc){var el=document.getElementById("growthAmt");if(!el)return;el.textContent=P[(cc&&C[cc])||"USD"]||P.USD;}
+  var cached=null;try{cached=JSON.parse(localStorage.getItem("modax_geo")||"null");}catch(e){}
+  if(cached&&cached.c&&(Date.now()-cached.t)<6048e5){set(cached.c);}
+  fetch("/geo").then(function(r){return r.json();}).then(function(d){var cc=(d.country||"").toUpperCase();try{localStorage.setItem("modax_geo",JSON.stringify({c:cc,t:Date.now()}));}catch(e){}set(cc);}).catch(function(){if(!cached){var m=/[-_]([A-Za-z]{2})$/.exec(navigator.language||"");set(m?m[1].toUpperCase():null);}});
+})();
+</script>
 </body>
 </html>
