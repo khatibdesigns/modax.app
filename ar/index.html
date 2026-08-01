@@ -359,5 +359,6 @@
   fetch("/geo").then(function(r){return r.json();}).then(function(d){var cc=(d.country||"").toUpperCase();try{localStorage.setItem("modax_geo",JSON.stringify({c:cc,t:Date.now()}));}catch(e){}set(cc);}).catch(function(){if(!cached){var m=/[-_]([A-Za-z]{2})$/.exec(navigator.language||"");set(m?m[1].toUpperCase():null);}});
 })();
 </script>
+<script src="/preview.js" defer></script>
 </body>
 </html>
