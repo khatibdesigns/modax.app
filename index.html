@@ -17,8 +17,11 @@
   <meta property="og:url" content="https://modax.app/" />
   <meta property="og:title" content="MODAX — The AI-native modular CRM your business actually fits" data-cms-attr="content:meta.ogTitle" />
   <meta property="og:description" content="A hosted, modular CRM with AI built in — copilot, daily briefings, AI forecasting and one-click drafting, grounded in your real data. License only the modules you need." data-cms-attr="content:meta.ogDescription" />
-  <meta property="og:image" content="" data-cms-attr="content:meta.ogImage" />
-  <meta name="twitter:image" content="" data-cms-attr="content:meta.ogImage" />
+  <meta property="og:image" content="https://modax.app/og.png" data-cms-attr="content:meta.ogImage" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="MODAX — the modular CRM your business actually fits" />
+  <meta name="twitter:image" content="https://modax.app/og.png" data-cms-attr="content:meta.ogImage" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#4f46e5" />
 </head>
@@ -310,6 +313,7 @@
     </div>
   </footer>
 
+  <script src="/analytics.js"></script>
   <script>
     document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -319,6 +323,15 @@
       if (!form) return;
       var status = document.getElementById('cfStatus');
       function setStatus(msg, kind) { status.textContent = msg; status.className = 'cf-status' + (kind ? ' ' + kind : ''); }
+      // Stamp the lead with where it came from. The API's `source` column is 60
+      // chars, so the campaign is appended only as far as it fits. Without this a
+      // paid click and a word-of-mouth visit look identical in contact_leads, and
+      // there is no way to tell what any spend actually bought.
+      function sourceTag(base) {
+        var a = window.modaxAttribution || {};
+        if (!a.utm_source) return base;
+        return (base + ' \u00b7 ' + a.utm_source + (a.utm_medium ? '/' + a.utm_medium : '')).slice(0, 60);
+      }
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
         var btn = form.querySelector('.cf-submit');
@@ -334,11 +347,12 @@
               name: d.name, email: d.email,
               company: d.company || undefined,
               message: d.message || undefined,
-              source: 'modax.app/contact',
+              source: sourceTag('modax.app/contact'),
             }),
           });
           if (!r.ok) throw new Error(String(r.status));
           form.reset();
+          if (window.modaxTrack) window.modaxTrack('generate_lead', { lead_source: 'contact_form' });
           setStatus('Thanks — we’ll be in touch within one business day.', 'ok');
         } catch (err) {
           setStatus('Something went wrong. Email us at hello@modax.app and we’ll sort it out.', 'err');
