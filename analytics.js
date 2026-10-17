@@ -2,21 +2,22 @@
    MODAX — GA4 + funnel-event + Google Ads conversion tracking.
 
    The site ran with no analytics of any kind until 17 Oct 2026, so there is
-   no history here: every number starts from the day GA_ID below is filled in.
+   no history to compare against: every number here starts on that date, and
+   anything that looks like a trend before mid-November is noise.
 
-   ONE THING TO DO: create a GA4 property for modax.app (Admin → Create
-   property → Web → https://modax.app), copy its "G-" Measurement ID, and
-   paste it into GA_ID. Until then this file deliberately does nothing except
-   define window.modaxTrack, so the contact form can call it without throwing.
+   GA4 property 559397599, web stream 16147742629 — deliberately separate from
+   khatibdesigns.com (G-HNDZLK8C8S), because two products in one property makes
+   both reports useless.
 
-   Keep it a SEPARATE property from khatibdesigns.com (G-HNDZLK8C8S). Two
-   products in one property makes both reports useless.
+   Mark these as key events in GA4 once data arrives: generate_lead first,
+   then signup_click. Everything else is diagnostic, not a goal.
 
-   Google Ads conversions stay dormant until ADS_ID and the matching labels
-   are pasted in; GA4 keeps working either way.
+   Google Ads conversions stay dormant until ADS_ID and the matching labels are
+   pasted in; GA4 keeps working either way. Blanking GA_ID disables the whole
+   file safely — modaxTrack stays defined, so the contact form never throws.
    ============================================================ */
 (function () {
-  var GA_ID  = '';                            // ← paste the G-XXXXXXXXXX here
+  var GA_ID  = 'G-EMSQHMC6GT';                // modax.app web stream
   var ADS_ID = '';                            // ← e.g. 'AW-1234567890', only if Ads runs
   var ADS_LABELS = {                          // per-conversion labels from Google Ads
     generate_lead:  '',                       // contact form submitted  ← PRIMARY
