@@ -20,6 +20,20 @@ async function fetchContent() {
 const esc = (s) => String(s).replace(/&(?![a-z#])/gi, '&amp;')
 
 export async function onRequest(context) {
+  // www.modax.app is now a custom domain on this same project, so without this
+  // it serves a second complete copy of the site — two hosts competing for the
+  // same rankings on a site that has none yet to spare. One canonical host,
+  // everything else 301s to it with path and query intact.
+  //
+  // Matched on the exact hostname rather than a /^www\./ pattern so that
+  // *.pages.dev preview deployments keep working: a blanket redirect to the
+  // apex would make every preview URL un-previewable.
+  const reqUrl = new URL(context.request.url)
+  if (reqUrl.hostname === 'www.modax.app') {
+    reqUrl.hostname = 'modax.app'
+    return Response.redirect(reqUrl.toString(), 301)
+  }
+
   const response = await context.next()
   const ct = response.headers.get('content-type') || ''
   if (!ct.includes('text/html')) return response
