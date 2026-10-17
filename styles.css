@@ -347,3 +347,60 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--mute
   [dir="rtl"] .ai-frame { transform: none; }
   [dir="rtl"] .split, [dir="rtl"] .split.alt { direction: rtl; }
 }
+
+/* ── Direct contact: WhatsApp ────────────────────────────────────────────────
+   In Kuwait WhatsApp is not the fallback channel, it is the one a business
+   expects to reach a vendor on — so it gets a real button and email keeps the
+   quiet line beneath it, rather than the other way round.
+
+   The inline button stays inside the site's own system (.btn-ghost) and lets
+   only the glyph carry the channel: it sits next to explanatory copy, so it
+   does not need to shout, and a saturated green slab here would fight the
+   indigo the rest of the page is built on. */
+.contact-direct {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.btn-wa { display: inline-flex; align-items: center; gap: 10px; }
+.btn-wa svg { width: 20px; height: 20px; flex: none; fill: #25d366; }
+.contact-direct .contact-alt { margin-top: 0; }
+
+/* The floating button is the opposite case and so takes the opposite decision.
+   On a phone this page runs past 6,000px and the contact section is at the end
+   of it; a floater is the short way there from anywhere, and recognition is the
+   whole of its value — an indigo circle would not read as WhatsApp at a glance,
+   so this one wears the channel's own green.
+
+   It hides itself once the contact section is on screen. That is the honest
+   behaviour, since by then it has done its job, and it is also what keeps a
+   fixed circle off the Send button on a narrow screen.
+
+   inset-inline-end puts it bottom-left on /ar/ with no RTL special-casing. */
+.wa-float {
+  position: fixed;
+  inset-block-end: 20px;
+  inset-inline-end: 20px;
+  z-index: 60;                      /* above the sticky nav at 50 */
+  width: 56px; height: 56px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  background: #25d366;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity .28s var(--ease), transform .28s var(--ease), visibility .28s;
+}
+.wa-float.is-on { opacity: 1; visibility: visible; transform: none; }
+.wa-float svg { width: 30px; height: 30px; fill: currentColor; }
+.wa-float:hover { filter: brightness(1.06); }
+.wa-float:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-float { transition: opacity .01ms linear, visibility .01ms linear; transform: none; }
+  .wa-float.is-on { transform: none; }
+}
