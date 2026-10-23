@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secure checkout — Khatib Designs</title>
+  <meta name="description" content="Secure checkout for KHD software products (MODAX, Marj3), processed by Paddle, our merchant of record." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css?v=wa1" />
+  <style>
+    .pay { max-width: 620px; margin: 0 auto; padding: 120px 20px 80px; text-align: center; }
+    .pay .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+    .pay h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 10px 0 12px; }
+    .pay p { color: var(--muted); font-size: 16px; line-height: 1.6; }
+    .pay .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; margin-top: 28px; font-size: 14px; }
+    .pay .links a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="/" class="logo">MOD<b>AX</b></a>
+    </div>
+  </header>
+  <main class="pay" id="main">
+    <span class="eyebrow">Secure checkout</span>
+    <h1 id="pay-title">Opening your checkout…</h1>
+    <p id="pay-msg">Payments for Khatib Designs software (MODAX, Marj3) are processed by Paddle.com, our merchant of record. If nothing opens, use the link from your email again or write to <a href="mailto:hello@modax.app">hello@modax.app</a>.</p>
+    <nav class="links" aria-label="Legal pages"><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a><a href="/refunds">Refund Policy</a></nav>
+  </main>
+  <!-- Paddle default payment link for every KHD product. Paddle sends buyers here with
+       ?_ptxn=txn_… (renewal and card-update emails, server-created transactions) and Paddle.js
+       opens that transaction's checkout by itself once initialised. The token is the public
+       client-side token "khd-pay". khatibdesigns.com is not a Paddle-approved domain, so this
+       lives on modax.app (approved). -->
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>
+    (function () {
+      var title = document.getElementById('pay-title'), msg = document.getElementById('pay-msg');
+      if (!/[?&]_ptxn=/.test(location.search)) title.textContent = 'Secure checkout';
+      Paddle.Initialize({
+        token: 'live_1cc2b9324a7524563ab67e9134e',
+        eventCallback: function (e) {
+          if (e && e.name === 'checkout.completed') {
+            title.textContent = 'Payment received — thank you';
+            msg.textContent = 'A receipt from Paddle is on its way to your email. You can close this page.';
+          }
+          if (e && e.name === 'checkout.error') title.textContent = 'Checkout could not open';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
