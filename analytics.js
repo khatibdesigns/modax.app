@@ -72,6 +72,71 @@
   function gtag() { dataLayer.push(arguments); }
   window.gtag = gtag;
   gtag('js', new Date());
+  // ---- consent (GDPR) ------------------------------------------------------
+  // Consent Mode v2. In the EEA/UK/CH, analytics and ads storage stay denied
+  // until the visitor accepts; elsewhere they default to granted. The banner is
+  // shown only when the browser's timezone is European (GCC visitors never see
+  // it) and can be reopened from the privacy page via khdConsent.open().
+  // The choice is kept in localStorage 'khd_consent' ('granted' | 'denied').
+  var EEA = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'];
+  var DENY  = { ad_storage: 'denied',  ad_user_data: 'denied',  ad_personalization: 'denied',  analytics_storage: 'denied' };
+  var ALLOW = { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' };
+  var withRegion = { region: EEA, wait_for_update: 500 };
+  for (var k in DENY) withRegion[k] = DENY[k];
+  gtag('consent', 'default', withRegion);
+  gtag('consent', 'default', ALLOW);
+  var saved = null;
+  try { saved = localStorage.getItem('khd_consent'); } catch (e) { /* storage blocked */ }
+  if (saved === 'granted') gtag('consent', 'update', ALLOW);
+  if (saved === 'denied') gtag('consent', 'update', DENY);
+
+  function choose(v) {
+    try { localStorage.setItem('khd_consent', v); } catch (e) { /* storage blocked */ }
+    gtag('consent', 'update', v === 'granted' ? ALLOW : DENY);
+    var b = document.getElementById('khd-consent');
+    if (b) b.parentNode.removeChild(b);
+  }
+  function banner() {
+    if (document.getElementById('khd-consent')) return;
+    var ar = (document.documentElement.lang || '').indexOf('ar') === 0;
+    var t = ar
+      ? { msg: 'نستخدم ملفات تعريف الارتباط من Google Analytics لفهم استخدام الموقع. لن نفعّلها إلا بموافقتك.', more: 'سياسة الخصوصية', yes: 'موافق', no: 'رفض' }
+      : { msg: 'We use Google Analytics cookies to understand how this site is used. They stay off unless you agree.', more: 'Privacy policy', yes: 'Accept', no: 'Reject' };
+    var d = document.createElement('div');
+    d.id = 'khd-consent';
+    d.setAttribute('role', 'dialog');
+    d.setAttribute('aria-label', ar ? 'ملفات تعريف الارتباط' : 'Cookies');
+    d.dir = ar ? 'rtl' : 'ltr';
+    d.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483000;max-width:640px;margin:0 auto;' +
+      'background:#111;color:#f5f5f5;border:1px solid #333;border-radius:12px;padding:14px 16px;box-shadow:0 8px 30px rgba(0,0,0,.35);' +
+      'font:14px/1.5 system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;display:flex;flex-wrap:wrap;gap:10px;align-items:center';
+    var p = document.createElement('p');
+    p.style.cssText = 'margin:0;flex:1 1 260px';
+    p.appendChild(document.createTextNode(t.msg + ' '));
+    var a = document.createElement('a');
+    a.href = '/privacy'; a.textContent = t.more;
+    a.style.cssText = 'color:#ff9a4d;text-decoration:underline';
+    p.appendChild(a);
+    d.appendChild(p);
+    [[t.no, 'denied'], [t.yes, 'granted']].forEach(function (x) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.textContent = x[0];
+      btn.style.cssText = 'font:inherit;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;min-height:40px;' +
+        'border:1px solid #ff9a4d;' + (x[1] === 'granted' ? 'background:#ff9a4d;color:#111' : 'background:transparent;color:#f5f5f5');
+      btn.addEventListener('click', function () { choose(x[1]); });
+      d.appendChild(btn);
+    });
+    document.body.appendChild(d);
+  }
+  window.khdConsent = { open: banner, choose: choose };
+  var tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { /* old browser */ }
+  var euTz = /^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Azores|Faroe))/.test(tz) &&
+    !/^Europe\/(Istanbul|Moscow|Minsk|Kiev|Kyiv|Simferopol|Volgograd|Samara|Ulyanovsk|Astrakhan|Saratov|Kirov)$/.test(tz);
+  if (!saved && euTz) {
+    if (document.body) banner(); else document.addEventListener('DOMContentLoaded', banner);
+  }
+
 
   var cfg = { anonymize_ip: true, site_locale: locale };
   if (attribution.utm_campaign) cfg.campaign_name   = attribution.utm_campaign;
