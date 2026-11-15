@@ -1,0 +1,22 @@
+# MODAX
+
+> MODAX is a hosted, modular CRM with an AI copilot built in. A business licenses only the modules it needs (contacts and deals, invoicing, quotes, service desk, campaigns, kiosk) and runs them in the browser or on a branded kiosk, with nothing to install. It works in English and Arabic. Made by Khatib Designs Ltd (Sofia, Bulgaria).
+
+The app runs at https://app.modax.app. Start free at https://app.modax.app/signup, or try a live demo at https://app.modax.app/try.
+
+## Plans
+- Starter: free. Contacts, deals and invoices; 1 workspace; web app and kiosk; community support.
+- Growth: $19 per user per month. Everything in Starter plus quotes, service desk, campaigns, automations, a shared inbox, the AI copilot and marketplace add-ons.
+- Scale: custom pricing. White-label and custom domains, publisher marketplace with revenue share, SSO and priority support.
+
+## Related
+- Modax Flow (https://modaxflow.com): the WhatsApp and website assistant from the same team, done for you, for GCC clinics, real estate, restaurants, schools and stores.
+
+## Pages
+- [Home (English)](https://modax.app/)
+- [Home (Arabic)](https://modax.app/ar/)
+- [Terms](https://modax.app/terms)
+- [Privacy](https://modax.app/privacy)
+- [Refunds](https://modax.app/refunds)
+
+Contact: hello@modax.app
